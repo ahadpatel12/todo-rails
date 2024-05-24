@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  description: MyString
+  status: 1
+  timer: 2024-05-24 17:59:30
+  remaining_time: 2024-05-24 17:59:30
+
+two:
+  title: MyString
+  description: MyString
+  status: 1
+  timer: 2024-05-24 17:59:30
+  remaining_time: 2024-05-24 17:59:30
