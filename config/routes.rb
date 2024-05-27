@@ -5,18 +5,24 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # authentication and user routes
-  post '/register', to: 'users#register'
-  post '/login' , to: 'users#login'
+  # authentication 
+  post '/register', to: 'authentication#register'
+  post '/login' , to: 'authentication#login'
+
+  # user routes
   get '/users' , to: 'users#list'
-  patch '/users/:id' , to: 'users#update'
+  patch '/users' , to: 'users#update'
   delete '/user/:id' , to: 'users#destroy'
 
   # todo routes
   post '/todo', to: 'todo#create'
   get '/todos', to: 'todo#list'
+  patch '/todo/:id', to: 'todo#edit'
   delete '/todo/:id', to: 'todo#destroy'
 
   # Defines the root path route ("/")
   # root "posts#index"
 end
+
+# == Route Map
+#

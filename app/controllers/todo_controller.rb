@@ -1,9 +1,9 @@
 class TodoController < ApplicationController
-  skip_before_action :verify_authenticity_token
+  # skip_before_action :verify_authenticity_token
+  # before_action :authenticate_user
 
   def create 
     # begin
-    puts "user id is #{todo_params[:user_id]}"
     todo_params.require([
       :user_id,
       :title,
@@ -11,7 +11,7 @@ class TodoController < ApplicationController
       :timer,
     ])
     user = User.find(todo_params[:user_id])
-    
+
     # raise "User not found" unless user
     todo = Todo.new(
       title: todo_params[:title],
@@ -31,8 +31,7 @@ class TodoController < ApplicationController
   end
 
   def list
-    todo_params.require(:user_id)
-    todos =  User.find(todo_params[:user_id]).todos
+    todos =  User.find(@current_user[:id]).todos
     render json: todos, status: 200
   end
 
@@ -66,7 +65,7 @@ class TodoController < ApplicationController
 
   private
     def todo_params
-      params.require(:todo).permit([
+      params.permit([
         :user_id,
         :title,
         :description,
@@ -75,6 +74,10 @@ class TodoController < ApplicationController
         # :remaining_time
       ])
     end
+
+    # def find_user
+    #   @user = User.find
+    # end
 
 
 end
