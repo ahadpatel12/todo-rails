@@ -24,6 +24,11 @@ class AuthenticationController < ApplicationController
     end
   end
 
+
+  def logged_in?
+    @current_user.nil?
+  end
+
   def register
     begin
     auth_params.require([:email, :password])
