@@ -4,8 +4,10 @@ class AuthenticationController < ApplicationController
 
   def login
     begin
+    pp "auth_params #{auth_params[:email].downcase}"
+    # pp "Params #{params}"
     auth_params.require([:email, :password])
-    user = User.find_by_email(params[:email].downcase)
+    user = User.find_by_email(auth_params[:email].downcase)
     raise Exceptions::UserNotFoundException unless user
     raise Exceptions::InvalidPasswordException unless user[:password] == auth_params[:password]
 
@@ -17,10 +19,15 @@ class AuthenticationController < ApplicationController
         user: user,
         message: "Login Success"
       }, status: :ok
+    rescue ActionController::ParameterMissing => e
+      render json: {error: e}, status: 400
     rescue Exceptions::UserNotFoundException
       render json: {error: "User Not found"}, status: 400
     rescue Exceptions::InvalidPasswordException
-      render json: {error: "Invalid Password"}, status: 400
+      render json: {error: "Invalid Password"}, status: 401
+    rescue Exception => e
+      pp e
+      render json: {error: e}, status: 401
     end
   end
 
