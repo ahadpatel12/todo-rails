@@ -11,9 +11,7 @@ module JsonWebToken
 
     def self.decode(token)
       decoded = JWT.decode(token,SECRET_KEY)
-      # pp "Decoded hash #{decoded}"
      hash = ActiveSupport::HashWithIndifferentAccess.new(decoded.first)
-    #  pp "hash  #{hash}"
      hash
     end
 

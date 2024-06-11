@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
   # todo routes
   post '/todo', to: 'todo#create'
+  get '/todo/:id', to: 'todo#find'
   get '/todos', to: 'todo#list'
   patch '/todo/:id', to: 'todo#edit'
   delete '/todo/:id', to: 'todo#destroy'

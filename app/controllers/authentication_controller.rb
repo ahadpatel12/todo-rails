@@ -11,7 +11,7 @@ class AuthenticationController < ApplicationController
     raise Exceptions::UserNotFoundException unless user
     raise Exceptions::InvalidPasswordException unless user[:password] == auth_params[:password]
 
-      token = JsonWebToken.encode({user:user})
+      token = JsonWebToken.encode({user:user.as_json})
       time = Time.now() + 7.days.to_i
       render json: {
         token: token,
@@ -40,8 +40,8 @@ class AuthenticationController < ApplicationController
     begin
     auth_params.require([:email, :password])
     user = User.find_by_email(auth_params[:email].downcase)
-    raise Exceptions::EmailExistsException unless user
-    token = JsonWebToken.encode({user:user})
+    raise Exceptions::EmailExistsException if user
+    token = JsonWebToken.encode({user:user.as_json})
     user = User.new(
       email: auth_params[:email],
       password: auth_params[:password]

@@ -1,18 +1,12 @@
 class TodoController < ApplicationController
-  # skip_before_action :verify_authenticity_token
-  # before_action :authenticate_user
-
+  skip_before_action :verify_authenticity_token
   def create 
-    # begin
     todo_params.require([
-      :user_id,
       :title,
       :description,
       :timer,
     ])
-    user = User.find(todo_params[:user_id])
-
-    # raise "User not found" unless user
+    user = User.find(@current_user[:id])
     todo = Todo.new(
       title: todo_params[:title],
       description: todo_params[:description],
@@ -21,19 +15,21 @@ class TodoController < ApplicationController
       remaining_time: todo_params[:timer],
     )
     user.todos << todo
-    # user.save
     render json: {todo:todo, message: "Todo created succesfully"}, status: 200
-
-  # rescue Exception => e
-
-  # end
-
   end
 
   def list
     todos =  User.find(@current_user[:id]).todos
     render json: todos, status: 200
   end
+
+  def find
+    user = User.find(@current_user[:id])
+    todo = user.todos.find(params[:id])
+    return render json: {todo: todo, message: "Success"}, status: 200
+ rescue ActiveRecord::RecordNotFound 
+    render json: {error: "Todo not found with id #{todo_params[:id]}"}, status: 404
+  end 
 
   def edit
     id = params[:id]
@@ -53,6 +49,9 @@ class TodoController < ApplicationController
       remaining_time: todo_params[:timer],
       )
     render json: {todo: todo, message: "Todo updated successfully"}
+  rescue ActiveRecord::RecordNotFound 
+    render json: {error: "Todo not found with id #{params[:id]}"}, status: 404
+
   end
 
   def destroy
@@ -66,6 +65,7 @@ class TodoController < ApplicationController
   private
     def todo_params
       params.permit([
+        :id,
         :user_id,
         :title,
         :description,
@@ -74,10 +74,5 @@ class TodoController < ApplicationController
         # :remaining_time
       ])
     end
-
-    # def find_user
-    #   @user = User.find
-    # end
-
 
 end
